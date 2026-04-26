@@ -29,4 +29,3 @@ spec:
     - port: {{ .Values.service.port }}
   selector:
     app: {{ .Chart.Name }}
-
