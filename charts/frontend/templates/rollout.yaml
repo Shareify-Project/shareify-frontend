@@ -24,4 +24,10 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           ports:
+          envFrom:
+            - configMapRef:
+                name: {{ .Release.Name }}-{{ .Chart.Name }}-config
+            - secretRef:
+                name: {{ .Release.Name }}-{{ .Chart.Name }}-secret
             - containerPort: {{ .Values.service.port }}
+
