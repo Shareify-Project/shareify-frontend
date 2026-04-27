@@ -2,13 +2,13 @@ replicaCount: 1
 image:
   repository: ghcr.io/shareify-project/shareify-frontend
   pullPolicy: Always
-  tag: "latest"
+  tag: "a91225a"
   version: "2.0-bluegreen-test"
 imagePullSecrets:
   - name: ghcr-secret
 service:
   type: ClusterIP
-  port: 80
+  port: 8000
 persistence:
   enabled: true
   storageClass: "nfs-client"
@@ -24,4 +24,5 @@ resources:
 
 config: {}
 secrets: {}
+
 
