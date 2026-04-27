@@ -3,6 +3,7 @@ image:
   repository: ghcr.io/shareify-project/shareify-frontend
   pullPolicy: Always
   tag: "latest"
+  version: "2.0-bluegreen-test"
 imagePullSecrets:
   - name: ghcr-secret
 service:
