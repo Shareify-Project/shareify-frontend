@@ -6,11 +6,10 @@ spec:
   replicas: {{ .Values.replicaCount }}
   strategy:
     blueGreen: 
-      # activeService is the one that receives public traffic
-      activeService: {{ .Chart.Name }}
-      # previewService is for you to test before switching
-      previewService: {{ .Chart.Name }}-preview
-      autoPromotionEnabled: false # We will switch it manually
+      # Using explicit names to avoid any template mismatch
+      activeService: frontend
+      previewService: frontend-preview
+      autoPromotionEnabled: false 
   selector:
     matchLabels:
       app: {{ .Chart.Name }}
