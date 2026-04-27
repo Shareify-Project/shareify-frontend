@@ -3,13 +3,12 @@ kind: Rollout
 metadata:
   name: {{ .Release.Name }}-{{ .Chart.Name }}
 spec:
-  replicas: {{ .Values.replicaCount }}
   strategy:
-    blueGreen: 
-      # Using explicit names to avoid any template mismatch
+    blueGreen:
       activeService: frontend
       previewService: frontend-preview
-      autoPromotionEnabled: false 
+      autoPromotionEnabled: false
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       app: {{ .Chart.Name }}
@@ -24,7 +23,7 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           ports:
-          
+            - containerPort: {{ .Values.service.port }}
           livenessProbe:
             httpGet:
               path: /health
@@ -42,7 +41,17 @@ spec:
                 name: {{ .Release.Name }}-{{ .Chart.Name }}-config
             - secretRef:
                 name: {{ .Release.Name }}-{{ .Chart.Name }}-secret
-            - containerPort: {{ .Values.service.port }}
 
 
-
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Chart.Name }}
+spec:
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.port }}
+      protocol: TCP
+  selector:
+    app: {{ .Chart.Name }}
