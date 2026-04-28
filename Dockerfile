@@ -1,23 +1,13 @@
-# Stage 1: Build
-FROM python:3.10-slim as builder
-WORKDIR /app
-COPY requirements.txt .
-RUN pip install --user --no-cache-dir -r requirements.txt
-
-# Stage 2: Final Run
-FROM python:3.10-slim
-WORKDIR /app
+# Stage 1: Build (if needed, but here it's static)
+FROM nginx:alpine
 
 # Create non-root user for security
-RUN groupadd -r shareify && useradd -r -g shareify shareify
-RUN mkdir -p /app/data && chown -R shareify:shareify /app
+RUN touch /var/run/nginx.pid && \
+    chown -R nginx:nginx /var/run/nginx.pid /var/cache/nginx /var/log/nginx /etc/nginx/conf.d
 
-# Copy dependencies from builder
-COPY --from=builder /root/.local /home/shareify/.local
-COPY . .
+# Copy static files
+COPY . /usr/share/nginx/html
 
-ENV PATH=/home/shareify/.local/bin:$PATH
-USER shareify
-
+USER nginx
 EXPOSE 80
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]
+CMD ["nginx", "-g", "daemon off;"]
